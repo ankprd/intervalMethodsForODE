@@ -30,7 +30,11 @@
 #ifndef _FADBAD_H
 #define _FADBAD_H
 
-#include <math.h>
+//#include <math.h>
+//#include<BIAS/Bias0.h>
+//#include<BIAS/BiasF.h>
+//#include <stdexcept>
+#include<helperFcts.h>
 
 namespace fadbad
 {
@@ -72,6 +76,114 @@ namespace fadbad
 		static bool myLe(const T& x, const T& y) { return x<=y; }
 		static bool myGt(const T& x, const T& y) { return x>y; }
 		static bool myGe(const T& x, const T& y) { return x>=y; }
+	};
+
+	template <> struct Op<BIASINTERVAL>
+	{
+		typedef BIASINTERVAL Base;
+		static Base myInteger(const int i) {
+			BIASINTERVAL res = {(double) i, double (i)}; 
+			return res; 
+		}
+		static Base myZero() { return myInteger(0); }
+		static Base myOne() { return myInteger(1);}
+		static Base myTwo() { return myInteger(2); }
+		static Base myPI() { 
+			BIASINTERVAL res = {3.14159265358979323846, 3.14159265358979323846}; 
+			return res;
+			}
+		static BIASINTERVAL myPos(const BIASINTERVAL& x) { return x; }
+		static BIASINTERVAL myNeg(const BIASINTERVAL& x) { 
+			BIASINTERVAL res;
+			BiasNeg(&res, &x);
+			return res; 
+		}
+		template <typename U> static BIASINTERVAL& myCadd(BIASINTERVAL& x, const U& y) { 
+			return helperAddBIASINTERVAL(x, y);
+			//return x+=y; 
+		}
+		
+		template <typename U> static BIASINTERVAL& myCSub(BIASINTERVAL& x, const U& y) { 
+			return helperSubBIASINTERVAL(x, y);
+			//return x+=y; 
+		}
+	
+		template <typename U> static BIASINTERVAL& myCmul(BIASINTERVAL& x, const U& y) { 
+			return helperMulBIASINTERVAL(x, y);
+			//return x+=y; 
+		}
+		
+		template <typename U> static BIASINTERVAL& myCdiv(BIASINTERVAL& x, const U& y) { 
+			return helperDivBIASINTERVAL(x, y);
+			//return x+=y; 
+		}
+
+		static BIASINTERVAL myInv(const BIASINTERVAL& x) { 
+			BIASINTERVAL temp = myOne();
+			return myCdiv(temp, x);	
+		}
+
+		static BIASINTERVAL mySqr(const BIASINTERVAL& x) { 
+			BIASINTERVAL res;
+			BiasMulII(&res, &x, &x);
+			return res;
+		}
+
+		template <typename X, typename Y>
+		static BIASINTERVAL myPow(const X& x, const Y& y) {
+			return herlperPow(x, y);
+		}
+		static BIASINTERVAL mySqrt(const BIASINTERVAL& x) {
+			BIASINTERVAL res;
+			BiasSqrt(&res, &x);
+			return res; 
+		}
+		static BIASINTERVAL myLog(const BIASINTERVAL& x) {
+			BIASINTERVAL res;
+			BiasLog(&res, &x);
+			return res; 
+		}
+		static BIASINTERVAL myExp(const BIASINTERVAL& x) {
+			BIASINTERVAL res;
+			BiasExp(&res, &x);
+			return res; 
+		}
+		static BIASINTERVAL mySin(const BIASINTERVAL& x) {
+			BIASINTERVAL res;
+			BiasSin(&res, &x);
+			return res; 
+		}
+		static BIASINTERVAL myCos(const BIASINTERVAL& x) {
+			BIASINTERVAL res;
+			BiasCos(&res, &x);
+			return res; 
+		}
+		static BIASINTERVAL myTan(const BIASINTERVAL& x) {
+			BIASINTERVAL res;
+			BiasTan(&res, &x);
+			return res; 
+		}
+		static BIASINTERVAL myAsin(const BIASINTERVAL& x) {
+			BIASINTERVAL res;
+			BiasArcSin(&res, &x);
+			return res; 
+		}
+		static BIASINTERVAL myAcos(const BIASINTERVAL& x) {
+			BIASINTERVAL res;
+			BiasArcCos(&res, &x);
+			return res; 
+		}
+		static BIASINTERVAL myAtan(const BIASINTERVAL& x) {
+			BIASINTERVAL res;
+			BiasArcTan(&res, &x);
+			return res; 
+		}
+		static bool myEq(const BIASINTERVAL& x, const BIASINTERVAL& y) { return BiasIsEqual(&x, &y); }
+		static bool myNe(const BIASINTERVAL& x, const BIASINTERVAL& y) { return 1 - BiasIsEqual(&x, &y); }
+		static bool myLt(const BIASINTERVAL& x, const BIASINTERVAL& y) { throw std::invalid_argument( "no less than"); }
+		static bool myLe(const BIASINTERVAL& x, const BIASINTERVAL& y) { throw std::invalid_argument( "no less or eq than"); }
+		static bool myGt(const BIASINTERVAL& x, const BIASINTERVAL& y) { throw std::invalid_argument( "no greater than"); }
+		static bool myGe(const BIASINTERVAL& x, const BIASINTERVAL& y) { throw std::invalid_argument( "no greater or eq than"); }
 	};
 } //namespace fadbad
 
