@@ -30,11 +30,11 @@
 #ifndef _FADBAD_H
 #define _FADBAD_H
 
-#include <math.h>
-#include<Interval.h>
-#include<Functions.h>
-#include <stdexcept>
-//#include<helperFcts.h>
+//#include <math.h>
+//#include<BIAS/Bias0.h>
+//#include<BIAS/BiasF.h>
+//#include <stdexcept>
+#include<helperFcts.h>
 
 namespace fadbad
 {
@@ -78,39 +78,147 @@ namespace fadbad
 		static bool myGe(const T& x, const T& y) { return x>=y; }
 	};
 
+	/*template <> struct Op<BIASINTERVAL>
+	{
+		typedef BIASINTERVAL Base;
+		static Base myInteger(const int i) {
+			BIASINTERVAL res = {(double) i, double (i)}; 
+			return res; 
+		}
+		static Base myZero() { return myInteger(0); }
+		static Base myOne() { return myInteger(1);}
+		static Base myTwo() { return myInteger(2); }
+		static Base myPI() { 
+			BIASINTERVAL res = {3.14159265358979323846, 3.14159265358979323846}; 
+			return res;
+			}
+		static BIASINTERVAL myPos(const BIASINTERVAL& x) { return x; }
+		static BIASINTERVAL myNeg(const BIASINTERVAL& x) { 
+			BIASINTERVAL res;
+			BiasNeg(&res, &x);
+			return res; 
+		}
+		template <typename U> static BIASINTERVAL& myCadd(BIASINTERVAL& x, const U& y) { 
+			return helperAddBIASINTERVAL(x, y);
+			//return x+=y; 
+		}
+		
+		template <typename U> static BIASINTERVAL& myCSub(BIASINTERVAL& x, const U& y) { 
+			return helperSubBIASINTERVAL(x, y);
+			//return x+=y; 
+		}
+	
+		template <typename U> static BIASINTERVAL& myCmul(BIASINTERVAL& x, const U& y) { 
+			return helperMulBIASINTERVAL(x, y);
+			//return x+=y; 
+		}
+		
+		template <typename U> static BIASINTERVAL& myCdiv(BIASINTERVAL& x, const U& y) { 
+			return helperDivBIASINTERVAL(x, y);
+			//return x+=y; 
+		}
+
+		static BIASINTERVAL myInv(const BIASINTERVAL& x) { 
+			BIASINTERVAL temp = myOne();
+			return myCdiv(temp, x);	
+		}
+
+		static BIASINTERVAL mySqr(const BIASINTERVAL& x) { 
+			BIASINTERVAL res;
+			BiasMulII(&res, &x, &x);
+			return res;
+		}
+
+		template <typename X, typename Y>
+		static BIASINTERVAL myPow(const X& x, const Y& y) {
+			return herlperPow(x, y);
+		}
+		static BIASINTERVAL mySqrt(const BIASINTERVAL& x) {
+			BIASINTERVAL res;
+			BiasSqrt(&res, &x);
+			return res; 
+		}
+		static BIASINTERVAL myLog(const BIASINTERVAL& x) {
+			BIASINTERVAL res;
+			BiasLog(&res, &x);
+			return res; 
+		}
+		static BIASINTERVAL myExp(const BIASINTERVAL& x) {
+			BIASINTERVAL res;
+			BiasExp(&res, &x);
+			return res; 
+		}
+		static BIASINTERVAL mySin(const BIASINTERVAL& x) {
+			BIASINTERVAL res;
+			BiasSin(&res, &x);
+			return res; 
+		}
+		static BIASINTERVAL myCos(const BIASINTERVAL& x) {
+			BIASINTERVAL res;
+			BiasCos(&res, &x);
+			return res; 
+		}
+		static BIASINTERVAL myTan(const BIASINTERVAL& x) {
+			BIASINTERVAL res;
+			BiasTan(&res, &x);
+			return res; 
+		}
+		static BIASINTERVAL myAsin(const BIASINTERVAL& x) {
+			BIASINTERVAL res;
+			BiasArcSin(&res, &x);
+			return res; 
+		}
+		static BIASINTERVAL myAcos(const BIASINTERVAL& x) {
+			BIASINTERVAL res;
+			BiasArcCos(&res, &x);
+			return res; 
+		}
+		static BIASINTERVAL myAtan(const BIASINTERVAL& x) {
+			BIASINTERVAL res;
+			BiasArcTan(&res, &x);
+			return res; 
+		}
+		static bool myEq(const BIASINTERVAL& x, const BIASINTERVAL& y) { return BiasIsEqual(&x, &y); }
+		static bool myNe(const BIASINTERVAL& x, const BIASINTERVAL& y) { return 1 - BiasIsEqual(&x, &y); }
+		static bool myLt(const BIASINTERVAL& x, const BIASINTERVAL& y) { throw std::invalid_argument( "no less than"); }
+		static bool myLe(const BIASINTERVAL& x, const BIASINTERVAL& y) { throw std::invalid_argument( "no less or eq than"); }
+		static bool myGt(const BIASINTERVAL& x, const BIASINTERVAL& y) { throw std::invalid_argument( "no greater than"); }
+		static bool myGe(const BIASINTERVAL& x, const BIASINTERVAL& y) { throw std::invalid_argument( "no greater or eq than"); }
+	};*/
+
 	template <> struct Op<INTERVAL>
 	{
-		typedef INTERVAL Base;
+		typedef MyType Base;
 		static Base myInteger(const int i) { return Base(i); }
 		static Base myZero() { return myInteger(0); }
 		static Base myOne() { return myInteger(1);}
 		static Base myTwo() { return myInteger(2); }
-		static Base myPI() { return INTERVAL(3.14159265358979323846); }
-		static INTERVAL myPos(const INTERVAL& x) { return +x; }
-		static INTERVAL myNeg(const INTERVAL& x) { return -x; }
-		template <typename U> static INTERVAL& myCadd(INTERVAL& x, const U& y) { return x+=y; }
-		template <typename U> static INTERVAL& myCsub(INTERVAL& x, const U& y) { return x-=y; }
-		template <typename U> static INTERVAL& myCmul(INTERVAL& x, const U& y) { return x*=y; }
-		template <typename U> static INTERVAL& myCdiv(INTERVAL& x, const U& y) { return x/=y; }
-		static INTERVAL myInv(const INTERVAL& x) { return myOne()/x; }
-		static INTERVAL mySqr(const INTERVAL& x) { return ::Sqr(x); }
+		static Base myPI() { return MyType(3.14159265358979323846); }
+		static MyType myPos(const MyType& x) { return +x; }
+		static MyType myNeg(const MyType& x) { return -x; }
+		template <typename U> static MyType& myCadd(MyType& x, const U& y) { return x+=y; }
+		template <typename U> static MyType& myCsub(MyType& x, const U& y) { return x-=y; }
+		template <typename U> static MyType& myCmul(MyType& x, const U& y) { return x*=y; }
+		template <typename U> static MyType& myCdiv(MyType& x, const U& y) { return x/=y; }
+		static MyType myInv(const MyType& x) { return myOne()/x; }
+		static MyType mySqr(const MyType& x) { return x*x; }
 		template <typename X, typename Y>
-		static INTERVAL myPow(const X& x, const Y& y) { return ::Power(x,y); }
-		static INTERVAL mySqrt(const INTERVAL& x) { return ::Sqrt(x); }
-		static INTERVAL myLog(const INTERVAL& x) { return ::Log(x); }
-		static INTERVAL myExp(const INTERVAL& x) { return ::Exp(x); }
-		static INTERVAL mySin(const INTERVAL& x) { return ::Sin(x); }
-		static INTERVAL myCos(const INTERVAL& x) { return ::Cos(x); }
-		static INTERVAL myTan(const INTERVAL& x) { return ::Tan(x); }
-		static INTERVAL myAsin(const INTERVAL& x) { return ::ArcSin(x); }
-		static INTERVAL myAcos(const INTERVAL& x) { return ::ArcCos(x); }
-		static INTERVAL myAtan(const INTERVAL& x) { return ::ArcTan(x); }
-		static bool myEq(const INTERVAL& x, const INTERVAL& y) { return x==y; }
-		static bool myNe(const INTERVAL& x, const INTERVAL& y) { return x!=y; }
-		static bool myLt(const INTERVAL& x, const INTERVAL& y) { throw std::invalid_argument( "unimplemented in fadbad.h"); }
-		static bool myLe(const INTERVAL& x, const INTERVAL& y) { throw std::invalid_argument( "unimplemented in fadbad.h"); }
-		static bool myGt(const INTERVAL& x, const INTERVAL& y) { throw std::invalid_argument( "unimplemented in fadbad.h"); }
-		static bool myGe(const INTERVAL& x, const INTERVAL& y) { throw std::invalid_argument( "unimplemented in fadbad.h"); }
+		static MyType myPow(const X& x, const Y& y) { return ::my_pow(x,y); }
+		static MyType mySqrt(const MyType& x) { return ::my_sqrt(x); }
+		static MyType myLog(const MyType& x) { return ::my_log(x); }
+		static MyType myExp(const MyType& x) { return ::my_exp(x); }
+		static MyType mySin(const MyType& x) { return ::my_sin(x); }
+		static MyType myCos(const MyType& x) { return ::my_cos(x); }
+		static MyType myTan(const MyType& x) { return ::my_tan(x); }
+		static MyType myAsin(const MyType& x) { return ::my_asin(x); }
+		static MyType myAcos(const MyType& x) { return ::my_acos(x); }
+		static MyType myAtan(const MyType& x) { return ::my_atan(x); }
+		static bool myEq(const MyType& x, const MyType& y) { return x==y; }
+		static bool myNe(const MyType& x, const MyType& y) { return x!=y; }
+		static bool myLt(const MyType& x, const MyType& y) { return x<y; }
+		static bool myLe(const MyType& x, const MyType& y) { return x<=y; }
+		static bool myGt(const MyType& x, const MyType& y) { return x>y; }
+		static bool myGe(const MyType& x, const MyType& y) { return x>=y; }
 	};
 } //namespace fadbad
 
