@@ -53,14 +53,14 @@ REAL step1(BIASINTERVAL* presB, BIASINTERVAL Xi, REAL maxH, REAL t){
     do {
         pBtemp = pres;
         h /= 2;
-        //printf("Pour h = %lf et t = %lf : \n", h, t);
+        printf("Pour h = %lf et t = %lf : \n", h, t);
         BIASINTERVAL fB = f(pBtemp);
         BIASINTERVAL timeInter = {t, t + h};
         BIASINTERVAL prod;
         BiasMulII(&prod, &timeInter, &fB);
         //printf("Prod = [%lf, %lf ]\n", prod.inf, prod.sup);
         BiasAddII(pres, &Xi, &prod);
-        //printf("Et res = [%lf, %lf] et included ? %d\n\n", pres->inf, pres->sup, BiasInI(pres, pBtemp));
+        printf("Et res = [%lf, %lf] et included ? %d\n\n", pres->inf, pres->sup, BiasInI(pres, pBtemp));
     } while (!BiasInI(pres, pBtemp));
     *presB = *pBtemp;
     return h;
